@@ -6,11 +6,13 @@ const {
   View,
   Image,
   Text,
+  Dimensions,
   PropTypes,
   StyleSheet
 } = React
 
 const COVER_URL = 'http://ww2.sinaimg.cn/large/7a8aed7bjw1f0cw7swd9tj20hy0qogoo.jpg'
+let screenWidth = Dimensions.get('window').width // pt       pt = 2px
 
 class ImageListView extends React.ListView {
 
@@ -55,17 +57,17 @@ class ImageListView extends React.ListView {
   
   onScroll(event) {
     const MAX = this.props.headerStartHeight - this.props.headerEndHeight
-
-    let y = event.nativeEvent.contentOffset.y // 获取当前纵向移动高度
+    let y = event.nativeEvent.contentOffset.y // 获取当前纵向移动高度 //pixel
     let offsetY = y > MAX ? MAX : y // 设置y的最大跟踪高度为 起始高度－最终高度
     let headerHeight = this.props.headerStartHeight - offsetY
-    let marginRight = offsetY * 2.5
+    let marginLeft = offsetY * -((screenWidth-85)/(this.props.headerStartHeight-this.props.headerEndHeight))
+    console.log('marginLeft: ' + marginLeft  +'   y: '+ screenWidth)
     let titleMarginTop = this.props.titleMarginTop - offsetY * ((this.props.titleMarginTop - 24)/MAX)
     let opacity = offsetY / MAX
 
     this.setState({
       headerHeight: headerHeight,
-      marginRight: marginRight,
+      marginLeft: marginLeft,
       titleMarginTop: titleMarginTop,
       opacity: 1 - opacity,
     })
@@ -88,10 +90,10 @@ class ImageListView extends React.ListView {
         <View style={[styles.headerWrapper, {height: this.state.headerHeight}]}>
           <Image source={imageSource} style={styles.headerImage}/>
           <View style={[styles.titleWrapper, {top: this.state.titleMarginTop, height: this.props.headerEndHeight - 24}]}>
-            <Text style={{marginRight: this.state.marginRight, fontSize: this.props.titleSize, color: this.props.titleColor}}>听演讲</Text>
+            <Text style={{marginLeft: this.state.marginLeft, fontSize: this.props.titleSize, color: this.props.titleColor, width: 150, textAlign: 'center'}}>听演讲</Text>
           </View>
           <View style={[styles.footerWrapper, {top: this.state.headerHeight-(this.props.headerEndHeight - 24), height: this.props.headerEndHeight - 24}]}>
-            <Text style={[styles.indicator,{fontSize: 16, marginLeft: 18, opacity: this.state.opacity}]}>以下是内容</Text>
+            <Text style={{fontSize: 16, marginLeft: 15, opacity: this.state.opacity}}>以下是内容</Text>
           </View>
         </View>
         

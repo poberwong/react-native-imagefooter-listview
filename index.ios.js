@@ -1,25 +1,45 @@
 import React from 'react-native'
+
 const {
   AppRegistry,
   ListView,
   View,
   Image,
   Text,
+  PropTypes,
   StyleSheet
 } = React
 
 const COVER_URL = 'http://ww2.sinaimg.cn/large/7a8aed7bjw1f0cw7swd9tj20hy0qogoo.jpg'
-const OFFSET_TEXT_Y = 90
-const OFFSET_Y = 190
 
-class ImageListView extends React.Component {
+class ImageListView extends React.ListView {
+
+  static propTypes = {
+    title: PropTypes.string,
+    titleColor: PropTypes.string,
+    titleSize: PropTypes.number,
+    headerStartHeight: PropTypes.number,
+    headerEndHeight: PropTypes.number,
+    headerImage: PropTypes.string,
+    titleMarginTop: PropTypes.number,
+  };
+
+  static defaultProps = {
+    title: 'title',
+    titleColor: 'white',
+    titleSize: 18,
+    headerStartHeight: 180,
+    headerEndHeight: 64,
+    titleMarginTop: 80,
+    headerImage: 'http://ww2.sinaimg.cn/large/7a8aed7bjw1f0cw7swd9tj20hy0qogoo.jpg'
+  };
+
   constructor(props) {
     super(props)
     
     this.state = {
-      marginTop: OFFSET_Y,
-      textMarginTop: OFFSET_TEXT_Y,
-      offsetTextY: OFFSET_TEXT_Y,
+      headerHeight: this.props.headerStartHeight,
+      titleMarginTop: this.props.titleMarginTop,
       opacity: 1,
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this._getData())
     }
@@ -34,42 +54,43 @@ class ImageListView extends React.Component {
   }
   
   onScroll(event) {
-    const MAX = OFFSET_Y - 24
+    const MAX = this.props.headerStartHeight - this.props.headerEndHeight
 
     let y = event.nativeEvent.contentOffset.y // 获取当前纵向移动高度
-    let offsetY = y > MAX ? MAX : y // 设置y的最大跟踪高度为 190 － 24
-    let marginTop = OFFSET_Y - offsetY
-    let marginRight = offsetY * 1.9
-    let textMarginTop = OFFSET_TEXT_Y - offsetY * ((OFFSET_TEXT_Y - 24)/MAX)
+    let offsetY = y > MAX ? MAX : y // 设置y的最大跟踪高度为 起始高度－最终高度
+    let headerHeight = this.props.headerStartHeight - offsetY
+    let marginRight = offsetY * 2.5
+    let titleMarginTop = this.props.titleMarginTop - offsetY * ((this.props.titleMarginTop - 24)/MAX)
     let opacity = offsetY / MAX
+
     this.setState({
-      marginTop: marginTop,
+      headerHeight: headerHeight,
       marginRight: marginRight,
-      textMarginTop: textMarginTop,
+      titleMarginTop: titleMarginTop,
       opacity: 1 - opacity,
     })
   }
 
   render () {
     const opacityStyle = {opacity: this.state.opacity}
-    const imageSource = {uri: COVER_URL}
+    const imageSource = {uri: this.props.headerImage}
     return (
       <View style={styles.container}>
         <ListView
           dataSource={this.state.dataSource}
           bounces={false}
-          renderHeader={this._renderHeader}
+          renderHeader={this._renderHeader.bind(this)}
           renderRow={this._renderRow.bind(this)}
           onScroll={this.onScroll.bind(this)}
           showsVerticalScrollIndicator={false}
-          scrollEventThrottle={5}/>
+          scrollEventThrottle={10}/>
 
-        <View style={[styles.headerWrapper, {height: this.state.marginTop + 55}]}>
+        <View style={[styles.headerWrapper, {height: this.state.headerHeight}]}>
           <Image source={imageSource} style={styles.headerImage}/>
-          <View style={[styles.indicatorWrapper, {top: this.state.textMarginTop}]}>
-            <Text style={[styles.indicator, {marginRight: this.state.marginRight}]}>听演讲</Text>
+          <View style={[styles.titleWrapper, {top: this.state.titleMarginTop, height: this.props.headerEndHeight - 24}]}>
+            <Text style={{marginRight: this.state.marginRight, fontSize: this.props.titleSize, color: this.props.titleColor}}>听演讲</Text>
           </View>
-          <View style={[styles.topWrapper, {top: this.state.marginTop}]}>
+          <View style={[styles.footerWrapper, {top: this.state.headerHeight-(this.props.headerEndHeight - 24), height: this.props.headerEndHeight - 24}]}>
             <Text style={[styles.indicator,{fontSize: 16, marginLeft: 18, opacity: this.state.opacity}]}>以下是内容</Text>
           </View>
         </View>
@@ -80,12 +101,12 @@ class ImageListView extends React.Component {
 
   _renderRow(content, sectionId, index){
     return(<View style={{height: 45}}>
-        <Text>{'\t\titem  '}{index}</Text>
+        <Text>{'\titem  '}{index}</Text>
       </View>)
   }
 
   _renderHeader(){
-    return(<View style={{height: OFFSET_Y + 55}}/>)
+    return(<View style={{height: this.props.headerStartHeight}}/>)
   }
 }
 
@@ -95,40 +116,33 @@ const styles = StyleSheet.create({
   },
 
   headerWrapper: {
-    height: OFFSET_Y+55,
     position: 'absolute',
     top: 0,
     right: 0,
     left: 0
   },
-  indicatorWrapper: {
-    height: 55,
+  titleWrapper: {
     position: 'absolute',
     left: 0,
     right: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'red'
   },
-  indicator: {
-    fontSize: 20,
-    color: 'white',
-  },
-  topWrapper: {
-    height: 55,
+  footerWrapper: {
     position: 'absolute',
     left: 0,
     right: 0,
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'red'
   },
   headerImage: {//OFFSET_Y是顶部内容的坐标，应该是View顶部，所以还要加上View的height才等于图片高度
     flex: 1
   },
-  text: {
-    fontSize: 16,
-    lineHeight: 24
-  }
 })
 
 AppRegistry.registerComponent("ImageListView", () => ImageListView);

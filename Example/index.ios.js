@@ -20,6 +20,8 @@ class Example extends React.Component {
     return (
       <View style={styles.container}>
         <ListView
+          title='Gank.io'
+          renderFooter={this._renderFooter}
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}/>
       </View>
@@ -38,6 +40,10 @@ class Example extends React.Component {
     return (<View style={{height: 45}}>
         <Text>{'\titem  '}{index}</Text>
       </View>)
+  }
+
+  _renderFooter () {
+    return (<Text style={{textAlign: 'center'}}>You can put any View you like here</Text>)
   }
 }
 

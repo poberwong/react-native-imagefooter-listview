@@ -1,10 +1,13 @@
 {
-  "name": "ImageListView",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
-  },
+  "name": "react-native-image-footer-listview",
+  "version": "0.1.5",
+  "author": "poberWong",
+  "main": "library/index.js",
+  "description": "a listview with a special image and footer",
+  "files": [
+  	"library",
+  	"LICENSE"
+  ],
   "dependencies": {
     "react-native": "^0.19.0"
   }

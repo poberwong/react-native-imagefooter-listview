@@ -19,11 +19,11 @@ class ImageListView extends React.Component {
   }
 
   render () {
-    let imageSource = {uri: 'http://ww2.sinaimg.cn/large/7a8aed7bjw1f0cw7swd9tj20hy0qogoo.jpg'}
+    //headerImage support string and number
     return (
       <View style={styles.container}>
         <ListView
-          headerImage={imageSource}
+          renderHeader={this._renderFooter}
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}/>
       </View>
@@ -42,6 +42,10 @@ class ImageListView extends React.Component {
     return(<View style={{height: 45}}>
         <Text>{'\titem  '}{index}</Text>
       </View>)
+  }
+
+  _renderFooter(){
+    return (<View style={{height: 120}}/>)
   }
 }
 

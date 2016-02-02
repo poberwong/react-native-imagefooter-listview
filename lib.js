@@ -21,7 +21,8 @@ class Lib extends React.Component {
     headerEndHeight: PropTypes.number,
     headerImages: PropTypes.oneOfType([PropTypes.string ,PropTypes.number]),
     titleMarginTop: PropTypes.number,
-    showsVerticalScrollIndicator: PropTypes.bool
+    showsVerticalScrollIndicator: PropTypes.bool,
+    renderFooter: PropTypes.func
   };
 
   static defaultProps = {
@@ -33,7 +34,6 @@ class Lib extends React.Component {
     titleMarginTop: 80,
     headerImages: 'http://ww2.sinaimg.cn/large/7a8aed7bjw1f0cw7swd9tj20hy0qogoo.jpg',
     renderScrollComponent: props => <ScrollView {...props} />,
-    renderRow: this._renderRow,
     showsVerticalScrollIndicator: false
   };
 
@@ -87,9 +87,12 @@ class Lib extends React.Component {
             <Text style={[styles.title, {fontSize: this.props.titleSize, color: this.props.titleColor}]}>{this.props.title}</Text>
             <View style={{flex: 1}}/>
           </View>
-          <View style={[styles.footerWrapper, {top: this.state.headerHeight-(this.props.headerEndHeight - 24), height: this.props.headerEndHeight - 24}]}>
-            <Text style={{fontSize: 16, marginLeft: 15, opacity: this.state.opacity}}>以下是内容</Text>
-          </View>
+          {
+            this.props.renderFooter
+            ? (<View style={[styles.footerWrapper, {top: this.state.headerHeight-(this.props.headerEndHeight - 24), height: this.props.headerEndHeight - 24, opacity: this.state.opacity}]}>
+            {this.props.renderFooter()}
+            </View>) : null
+          }
         </View>
         
       </View>

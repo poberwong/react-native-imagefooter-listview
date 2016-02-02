@@ -12,7 +12,6 @@ const {
 } = React
 
 const COVER_URL = 'http://ww2.sinaimg.cn/large/7a8aed7bjw1f0cw7swd9tj20hy0qogoo.jpg'
-let screenWidth = Dimensions.get('window').width // pt       pt = 2px
 
 class ImageListView extends React.ListView {
 
@@ -43,6 +42,7 @@ class ImageListView extends React.ListView {
       headerHeight: this.props.headerStartHeight,
       titleMarginTop: this.props.titleMarginTop,
       opacity: 1,
+      leftFlex: 1,
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this._getData())
     }
   }
@@ -60,15 +60,14 @@ class ImageListView extends React.ListView {
     let y = event.nativeEvent.contentOffset.y // 获取当前纵向移动高度 //pixel
     let offsetY = y > MAX ? MAX : y // 设置y的最大跟踪高度为 起始高度－最终高度
     let headerHeight = this.props.headerStartHeight - offsetY
-    let marginLeft = offsetY * -((screenWidth-85)/(this.props.headerStartHeight-this.props.headerEndHeight))
-    console.log('marginLeft: ' + marginLeft  +'   y: '+ screenWidth)
+    let leftFlex = 1 - offsetY/MAX
     let titleMarginTop = this.props.titleMarginTop - offsetY * ((this.props.titleMarginTop - 24)/MAX)
     let opacity = offsetY / MAX
 
     this.setState({
-      headerHeight: headerHeight,
-      marginLeft: marginLeft,
-      titleMarginTop: titleMarginTop,
+      headerHeight,
+      leftFlex,
+      titleMarginTop,
       opacity: 1 - opacity,
     })
   }
@@ -90,7 +89,9 @@ class ImageListView extends React.ListView {
         <View style={[styles.headerWrapper, {height: this.state.headerHeight}]}>
           <Image source={imageSource} style={styles.headerImage}/>
           <View style={[styles.titleWrapper, {top: this.state.titleMarginTop, height: this.props.headerEndHeight - 24}]}>
-            <Text style={{marginLeft: this.state.marginLeft, fontSize: this.props.titleSize, color: this.props.titleColor, width: 150, textAlign: 'center'}}>听演讲</Text>
+            <View style={{flex: this.state.leftFlex}}/>
+            <Text style={[styles.title, {fontSize: this.props.titleSize, color: this.props.titleColor}]}>{this.props.title}</Text>
+            <View style={{flex: 1}}/>
           </View>
           <View style={[styles.footerWrapper, {top: this.state.headerHeight-(this.props.headerEndHeight - 24), height: this.props.headerEndHeight - 24}]}>
             <Text style={{fontSize: 16, marginLeft: 15, opacity: this.state.opacity}}>以下是内容</Text>
@@ -127,12 +128,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: 'red'
   },
+  title: {
+    marginLeft: 15,
+    marginRight: 15
+  }
   footerWrapper: {
     position: 'absolute',
     left: 0,

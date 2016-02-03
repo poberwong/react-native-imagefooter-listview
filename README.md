@@ -3,10 +3,9 @@
 
 this is a listview with a scrollable header with an image、title as well as a custom footer view.  
 
-Of course, this special listView supports all properties provided by ListView, so you can use it just like a original ListView.
+Of course, this special listView supports all properties provided by ListView, so you can use it just like an original ListView.
 
 ## Demo  
-![](http://ww1.sinaimg.cn/large/005zU9b3gw1f0larnj2ymj30ku12a789.jpg)
 ![](http://ww1.sinaimg.cn/large/005zU9b3gw1f0l8xehcf3g30aa0iftsd.gif)  
 [*SOURCE*](https://github.com/Bob1993/react-native-imagefooter-listview/blob/master/Example/index.ios.js)
 

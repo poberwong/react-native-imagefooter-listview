@@ -1,6 +1,6 @@
 {
   "name": "react-native-imagefooter-listview",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "poberWong",
   "main": "lib/index.js",
   "description": "a listview with a special image and footer",

@@ -1,11 +1,11 @@
-import React from 'react-native'
+import React from 'react'
 import ListView from 'react-native-imagefooter-listview'
-const {
+import {
   AppRegistry,
   View,
   Text,
   StyleSheet
-} = React
+} from 'react-native'
 
 class Example extends React.Component {
   constructor (props) {

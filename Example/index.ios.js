@@ -1,5 +1,5 @@
 import React from 'react'
-import ListView from 'react-native-imagefooter-listview'
+import ImageHeaderScroller from './ListView'
 import {
   AppRegistry,
   View,
@@ -8,22 +8,15 @@ import {
 } from 'react-native'
 
 class Example extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this._getData())
-    }
-  }
-
   render () {
     // headerImage support string and number
     return (
       <View style={styles.container}>
-        <ListView
+        <ImageHeaderScroller
           title='Gank.io'
-          renderFooter={this._renderFooter}
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow.bind(this)}/>
+          renderFooter={this._renderFooter}>
+          {this._getData().map(this._renderRow)}
+        </ImageHeaderScroller>
       </View>
     )
   }
@@ -36,10 +29,14 @@ class Example extends React.Component {
     return arr
   }
 
-  _renderRow (content, sectionId, index) {
-    return (<View style={{height: 45}}>
+  _renderRow (item, index) {
+    return (
+      <View
+        key={index}
+        style={{height: 45}}>
         <Text>{'\titem  '}{index}</Text>
-      </View>)
+      </View>
+    )
   }
 
   _renderFooter () {
